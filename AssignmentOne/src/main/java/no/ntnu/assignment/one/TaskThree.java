@@ -2,6 +2,7 @@ package no.ntnu.assignment.one;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import no.ntnu.assignment.one.graphics.AniImage;
@@ -10,18 +11,19 @@ import no.ntnu.assignment.one.model.AniChopper;
 import no.ntnu.assignment1.task1.R;
 import sheep.game.State;
 import sheep.input.TouchListener;
+import sheep.math.Vector2;
 
 /**
  * Created by bvx89 on 1/16/14.
  */
-public class TaskThree extends State implements TouchListener, LoadListener {
-        public static final String TAG = "Test";
-        private AniChopper chopper;
+public class TaskThree extends State implements TouchListener {
+    public static final String TAG = "Test";
+    private AniChopper chopperOne;
+    private AniChopper chopperTwo;
 
-        private int soundId;
-        private AudioMngr audio = AudioMngr.getInstance();
+    private int soundId;
 
-        public TaskThree() {
+    public TaskThree() {
         this.addTouchListener(new TouchListener() {
 
             @Override
@@ -42,22 +44,16 @@ public class TaskThree extends State implements TouchListener, LoadListener {
         });
 
         // Get image
-        chopper = new AniChopper(new AniImage(R.drawable.chopper_sprite, 12, 130));
-
-        // Register as Listener for load
-        audio.addListener(this);
-
-        // Get correct id
-        soundId = audio.load(R.raw.chopper);
+        chopperOne = new AniChopper(new AniImage(R.drawable.chopper_sprite, 100, 130));
+        chopperTwo = new AniChopper(new AniImage(R.drawable.chopper_sprite, 100, 130));
 
     }
 
     private boolean clean() {
         getGame().popState();
         getGame().pushState(new TitleScreen());
-        chopper.die();
-        audio.getSoundPool().stop(soundId);
-        audio.getSoundPool().unload(soundId);
+        chopperOne.die();
+        chopperTwo.die();
         return true;
     }
 
@@ -68,20 +64,34 @@ public class TaskThree extends State implements TouchListener, LoadListener {
         // Clear bg
         canvas.drawColor(Color.DKGRAY);
 
-        chopper.draw(canvas);
+        chopperOne.draw(canvas);
+        chopperTwo.draw(canvas);
     }
 
     @Override
     public void update(float dt) {
         // gameWorld.update(dt);
-        chopper.update(dt);
+        chopperOne.update(dt);
+        chopperTwo.update(dt);
 
-    }
+        if (chopperOne.collides(chopperTwo)) {
+            Log.d(TAG, "COLLISION LOL");
 
-    @Override
-    public void songLoaded(int id) {
-        if (id == soundId) {
-            // audio.getSoundPool().play(soundId, 1, 1, 1, -1, 1);
+            Vector2 n = new Vector2(    chopperOne.getX() - chopperTwo.getX(),
+                                        chopperOne.getY() - chopperTwo.getY());
+            Vector2 v1 = chopperOne.getSpeed();
+            Vector2 v2 = chopperTwo.getSpeed();
+
+            float a1 = v1.dot(n);
+            float a2 = v2.dot(n);
+
+            float p = a1 - a2;
+            n.multiply(p);
+
+            v1.subtract(n);
+            v2.subtract(n);
+            chopperOne.setSpeed(v1);
+            chopperTwo.setSpeed(v2);
         }
     }
 }

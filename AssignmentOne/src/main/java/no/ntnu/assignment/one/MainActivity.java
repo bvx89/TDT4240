@@ -5,6 +5,7 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import java.util.ArrayList;
 
@@ -70,5 +71,16 @@ public class MainActivity extends Activity implements LoadListener {
     @Override
     public void songLoaded(int id) {
         audioList.add(id);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            mGame.popState();
+            mGame.pushState(new TitleScreen());
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

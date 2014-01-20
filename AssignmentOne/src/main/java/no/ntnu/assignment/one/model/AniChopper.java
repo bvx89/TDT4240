@@ -20,8 +20,8 @@ public class AniChopper extends Sprite {
     public AniChopper(AniImage img) {
         super(img);
         setAcceleration(0, 0);
-        setSpeed(-150f, 100f);
-        setPosition(300f, 150f);
+        setSpeed((float)(Math.random() * 250.0f), (float)(Math.random() * 250.0f));
+        setPosition((float)(Math.random() * 250.0f), (float)(Math.random() * 250.0f));
 
         imgWidth = img.getWidth();
         imgHeight = img.getHeight();
