@@ -81,7 +81,9 @@ public class TitleScreen extends State implements WidgetListener {
                 getGame().pushState(new TaskTwo());
             } else if (task.equals("Task 3")) {
                 getGame().pushState(new TaskThree());
-            }
+            } else if (task.equals("Task 4")) {
+				getGame().pushState(new TaskFour());
+			}
         }
     }
 

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: sheep">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/AssignmentOne/libs/sheep.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
