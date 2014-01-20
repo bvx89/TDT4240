@@ -39,7 +39,7 @@ public class AniImage extends SpriteView {
         this.rate = 1000/rate;
         this.dx = dx * 2;
 
-        this.max = drawable.getMinimumWidth() / dx;
+        this.max = 4;
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         this.mDrawable = drawable;
     }
@@ -47,30 +47,36 @@ public class AniImage extends SpriteView {
     @Override
     public void update(float dt) {
         accumulatedTime += dt * 1000;
+        if (accumulatedTime > rate) {
+
+            index = (index+1) % max;
+
+            // Reset counter
+            accumulatedTime = accumulatedTime - rate;
+        }
     }
 
     @Override
     public void draw(Canvas canvas, Matrix transformation) {
         canvas.save();
 
-        canvas.clipRect(dx * index, 0, dx * (index+1),
-                mDrawable.getIntrinsicHeight(), Region.Op.REPLACE);
+        // Find out if the image has been flipped
+        float[] matrix = new float[9];
+        transformation.getValues(matrix);
 
-        transformation.preTranslate(-(dx * index), 0);
+        transformation.preTranslate(-(dx * index) - (dx/2 * matrix[0]), 0);
 
-        // Find out if the bounds need to be updated
-        if (accumulatedTime > rate) {
 
-            index = (index+1) % max;
-
-            // Reset counter
-            accumulatedTime = 0;
-        }
         canvas.concat(transformation);
+
+        canvas.clipRect(dx * index, 0, dx * (index+1),
+              mDrawable.getIntrinsicHeight());
+
         mDrawable.draw(canvas);
 
         canvas.restore();
     }
+
 
     public int getWidth() {
         return dx;

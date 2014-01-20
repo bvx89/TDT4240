@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.util.Log;
 
 import java.util.HashMap;
 
@@ -56,15 +55,17 @@ public class TitleScreen extends State implements WidgetListener {
 
     @Override
     public void draw(Canvas canvas) {
-        // Clear bg
-        canvas.drawColor(Color.DKGRAY);
+        if (canvas != null) {
+            // Clear bg
+            canvas.drawColor(Color.DKGRAY);
 
-        chopper.draw(canvas,
+            chopper.draw(canvas,
                     Config.WINDOW_WIDTH*0.35f,
                     Config.WINDOW_HEIGHT*0.15f);
 
-        for (TextButton tb : mButtons.values()) {
-            tb.draw(canvas);
+            for (TextButton tb : mButtons.values()) {
+                tb.draw(canvas);
+            }
         }
     }
     @Override
@@ -78,6 +79,8 @@ public class TitleScreen extends State implements WidgetListener {
                 getGame().pushState(new TaskOne());
             } else if (task.equals("Task 2")) {
                 getGame().pushState(new TaskTwo());
+            } else if (task.equals("Task 3")) {
+                getGame().pushState(new TaskThree());
             }
         }
     }

@@ -1,18 +1,25 @@
 package no.ntnu.assignment.one;
 
 import android.app.Activity;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
+import java.util.ArrayList;
+
+import no.ntnu.assignment.one.interfaces.LoadListener;
 import sheep.game.Game;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements LoadListener {
+    private Game mGame;
+
+    private AudioMngr mAudio = AudioMngr.getInstance();
+    private ArrayList<Integer> audioList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Game game = new Game(this, null);
 
         // Get resolution of display
         DisplayMetrics dm = new DisplayMetrics();
@@ -21,11 +28,47 @@ public class MainActivity extends Activity {
         Config.WINDOW_HEIGHT = dm.heightPixels;
         Config.WINDOW_WIDTH  = dm.widthPixels;
 
-        // Push the main state.
-        game.pushState(new TitleScreen());
+        // Register as a listener with the audio manager
+        mAudio.addListener(this);
 
-        // View the game.
-        setContentView(game);
+        init();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Log.d("TAG", "onPause called()");
+
+        // Stop all songs
+        SoundPool s = mAudio.getSoundPool();
+        for (Integer i : audioList) {
+            s.stop(i);
+        }
+
+        mGame.surfaceDestroyed(null);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        init();
+    }
+
+    private void init() {
+        mGame = new Game(this, null);
+
+        // Push the main state.
+        mGame.pushState(new TitleScreen());
+
+        // View the game.
+        setContentView(mGame);
+    }
+
+    @Override
+    public void songLoaded(int id) {
+        audioList.add(id);
+    }
 }

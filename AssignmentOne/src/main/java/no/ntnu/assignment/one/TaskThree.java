@@ -4,25 +4,24 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.view.MotionEvent;
 
+import no.ntnu.assignment.one.graphics.AniImage;
 import no.ntnu.assignment.one.interfaces.LoadListener;
-import no.ntnu.assignment.one.model.Chopper;
+import no.ntnu.assignment.one.model.AniChopper;
 import no.ntnu.assignment1.task1.R;
 import sheep.game.State;
-import sheep.graphics.Image;
 import sheep.input.TouchListener;
-
 
 /**
  * Created by bvx89 on 1/16/14.
  */
-public class TaskOne extends State implements TouchListener, LoadListener {
-    public static final String TAG = "Test";
-    private Chopper chopper;
+public class TaskThree extends State implements TouchListener, LoadListener {
+        public static final String TAG = "Test";
+        private AniChopper chopper;
 
-    private int soundId;
-    private AudioMngr audio = AudioMngr.getInstance();
+        private int soundId;
+        private AudioMngr audio = AudioMngr.getInstance();
 
-    public TaskOne() {
+        public TaskThree() {
         this.addTouchListener(new TouchListener() {
 
             @Override
@@ -43,7 +42,7 @@ public class TaskOne extends State implements TouchListener, LoadListener {
         });
 
         // Get image
-        chopper = new Chopper(new Image(R.drawable.chopper_static));
+        chopper = new AniChopper(new AniImage(R.drawable.chopper_sprite, 12, 130));
 
         // Register as Listener for load
         audio.addListener(this);
@@ -54,10 +53,11 @@ public class TaskOne extends State implements TouchListener, LoadListener {
     }
 
     private boolean clean() {
-        audio.getSoundPool().stop(soundId);
         getGame().popState();
         getGame().pushState(new TitleScreen());
         chopper.die();
+        audio.getSoundPool().stop(soundId);
+        audio.getSoundPool().unload(soundId);
         return true;
     }
 
@@ -65,12 +65,10 @@ public class TaskOne extends State implements TouchListener, LoadListener {
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
-        if (canvas != null) {
-            // Clear bg
-            canvas.drawColor(Color.DKGRAY);
+        // Clear bg
+        canvas.drawColor(Color.DKGRAY);
 
-            chopper.draw(canvas);
-        }
+        chopper.draw(canvas);
     }
 
     @Override

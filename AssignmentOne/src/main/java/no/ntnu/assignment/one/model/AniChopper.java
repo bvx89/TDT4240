@@ -1,6 +1,8 @@
 package no.ntnu.assignment.one.model;
 
 import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.util.Log;
 
 import no.ntnu.assignment.one.Config;
 import no.ntnu.assignment.one.graphics.AniImage;
@@ -10,6 +12,8 @@ import sheep.game.Sprite;
  * Created by bvx89 on 1/16/14.
  */
 public class AniChopper extends Sprite {
+    private static final String TAG = "TATAS";
+
     private float imgWidth;
     private float imgHeight;
 
@@ -27,8 +31,6 @@ public class AniChopper extends Sprite {
     public void update(float dt) {
         super.update(dt);
 
-        /*
-
         // Calculate bounds
         float minx = getPosition().getX() - imgWidth/2;
         float maxx = minx + imgWidth;
@@ -45,7 +47,6 @@ public class AniChopper extends Sprite {
             setXSpeed(getSpeed().getX() * -1);
             setScale(1, 1);
             setPosition(getPosition().getX() - imgWidth, getPosition().getY());
-
         }
 
         // Check top and bottom
@@ -54,7 +55,6 @@ public class AniChopper extends Sprite {
         } else if (maxy > Config.WINDOW_HEIGHT) { // Bottom edge
             setYSpeed(getSpeed().getY() * -1);
         }
-        */
 
     }
 }

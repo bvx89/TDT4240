@@ -2,30 +2,26 @@ package no.ntnu.assignment.one;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.MotionEvent;
 
-import no.ntnu.assignment.one.graphics.AniImage;
 import no.ntnu.assignment.one.interfaces.LoadListener;
-import no.ntnu.assignment.one.model.AniChopper;
 import no.ntnu.assignment.one.model.Chopper;
 import no.ntnu.assignment1.task1.R;
 import sheep.game.State;
-import sheep.game.World;
 import sheep.graphics.Image;
 import sheep.input.TouchListener;
 
 /**
- * Created by bvx89 on 1/16/14.
+ * Created by bvx89 on 1/18/14.
  */
 public class TaskTwo extends State implements TouchListener, LoadListener {
-        public static final String TAG = "Test";
-        private AniChopper chopper;
+    public static final String TAG = "Test";
+    private Chopper chopper;
 
-        private int soundId;
-        private AudioMngr audio = AudioMngr.getInstance();
+    private int soundId;
+    private AudioMngr audio = AudioMngr.getInstance();
 
-        public TaskTwo() {
+    public TaskTwo() {
         this.addTouchListener(new TouchListener() {
 
             @Override
@@ -46,7 +42,7 @@ public class TaskTwo extends State implements TouchListener, LoadListener {
         });
 
         // Get image
-        chopper = new AniChopper(new AniImage(R.drawable.chopper_sprite, 1, 130));
+        chopper = new Chopper(new Image(R.drawable.chopper_static));
 
         // Register as Listener for load
         audio.addListener(this);
@@ -57,11 +53,10 @@ public class TaskTwo extends State implements TouchListener, LoadListener {
     }
 
     private boolean clean() {
+        audio.getSoundPool().stop(soundId);
         getGame().popState();
         getGame().pushState(new TitleScreen());
         chopper.die();
-        audio.getSoundPool().stop(soundId);
-        audio.getSoundPool().unload(soundId);
         return true;
     }
 
@@ -85,7 +80,7 @@ public class TaskTwo extends State implements TouchListener, LoadListener {
     @Override
     public void songLoaded(int id) {
         if (id == soundId) {
-            // audio.getSoundPool().play(soundId, 1, 1, 1, -1, 1);
+            audio.getSoundPool().play(soundId, 1, 1, 1, -1, 1);
         }
     }
 }
