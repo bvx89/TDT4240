@@ -25,14 +25,6 @@ public class TitleScreen extends State implements WidgetListener {
     private HashMap<String, TextButton> mButtons;
 
     public TitleScreen() {
-
-        Paint[] ButtonColors = {
-                new Font(255, 255, 255, 50.0f,
-                        Typeface.SANS_SERIF, Typeface.BOLD),
-                new Font(57, 152, 249, 50.0f,
-                        Typeface.SANS_SERIF, Typeface.BOLD)
-        };
-
         String[] tasks = {"Task 1", "Task 2", "Task 3", "Task 4"};
 
         mButtons = new HashMap<>(tasks.length);
@@ -43,7 +35,7 @@ public class TitleScreen extends State implements WidgetListener {
             tb = new TextButton(
                     Config.WINDOW_WIDTH*0.425f,
                     Config.WINDOW_HEIGHT*(0.4f + 0.1f*i),
-                    tasks[i], ButtonColors);
+                    tasks[i], Config.ButtonColors);
 
             tb.addWidgetListener(this);
             addTouchListener(tb);

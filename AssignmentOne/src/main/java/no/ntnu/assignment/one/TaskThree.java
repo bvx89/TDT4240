@@ -44,8 +44,12 @@ public class TaskThree extends State implements TouchListener {
         });
 
         // Get image
-        chopperOne = new AniChopper(new AniImage(R.drawable.chopper_sprite, 100, 130));
-        chopperTwo = new AniChopper(new AniImage(R.drawable.chopper_sprite, 100, 130));
+        chopperOne = new AniChopper(new AniImage(R.drawable.chopper_sprite, 10, 4));
+        chopperTwo = new AniChopper(new AniImage(R.drawable.chopper_sprite, 10, 4));
+
+        chopperOne.setPosition(150f, 280f);
+        chopperTwo.setPosition(450f, 480f);
+        chopperTwo.setSpeed(-200f, -200f);
 
     }
 
@@ -77,6 +81,7 @@ public class TaskThree extends State implements TouchListener {
         if (chopperOne.collides(chopperTwo)) {
             Log.d(TAG, "COLLISION LOL");
 
+            /*
             Vector2 n = new Vector2(    chopperOne.getX() - chopperTwo.getX(),
                                         chopperOne.getY() - chopperTwo.getY());
             Vector2 v1 = chopperOne.getSpeed();
@@ -92,6 +97,10 @@ public class TaskThree extends State implements TouchListener {
             v2.subtract(n);
             chopperOne.setSpeed(v1);
             chopperTwo.setSpeed(v2);
+            Log.d(TAG, "speed1: " + v1.toString());
+            Log.d(TAG, "speed2: " + v2.toString());
+            */
         }
+
     }
 }

@@ -2,11 +2,13 @@ package no.ntnu.assignment.one.graphics;
 
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Region;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import sheep.game.Game;
+import android.graphics.Color;
 import sheep.graphics.SpriteView;
 
 /**
@@ -30,14 +32,28 @@ public class AniImage extends SpriteView {
     // Milliseconds between each image change
     private float rate = 0;
 
+    private boolean isMirrored = false;
 
-    public AniImage(int resourceId, int rate, int dx) {
-        this(Game.getInstance().getResources().getDrawable(resourceId), rate, dx);
+
+    /**
+     *
+     * @param resourceId Id of the drawable to retrieve
+     * @param rate Rate of which to switch frames in the sprite
+     * @param n Number of images in the sprite
+     */
+    public AniImage(int resourceId, int rate, int n) {
+        this(Game.getInstance().getResources().getDrawable(resourceId), rate, n);
     }
 
-    public AniImage(Drawable drawable, int rate, int dx) {
+    /**
+     *
+     * @param drawable Sprite with all the frames
+     * @param rate Rate of which to switch frames in the sprite
+     * @param n Number of images in the sprite
+     */
+    public AniImage(Drawable drawable, int rate, int n) {
         this.rate = 1000/rate;
-        this.dx = dx * 2;
+        this.dx = drawable.getMinimumWidth() / n;
 
         this.max = 4;
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -47,7 +63,7 @@ public class AniImage extends SpriteView {
     @Override
     public void update(float dt) {
         accumulatedTime += dt * 1000;
-        if (accumulatedTime > rate) {
+        if (accumulatedTime >= rate) {
 
             index = (index+1) % max;
 
@@ -56,22 +72,39 @@ public class AniImage extends SpriteView {
         }
     }
 
+    private int pre = -1;
+
     @Override
     public void draw(Canvas canvas, Matrix transformation) {
         canvas.save();
 
-        // Find out if the image has been flipped
-        float[] matrix = new float[9];
-        transformation.getValues(matrix);
+        // Invert the image
+        if (isMirrored) {
+            transformation.preTranslate(dx*(index+1), 0);
 
-        transformation.preTranslate(-(dx * index) - (dx/2 * matrix[0]), 0);
+            // Translate picture to position it correctly in the frame
+            transformation.preScale(-1, 1);
 
+            // Add the transformation to the canvas
+            canvas.concat(transformation);
 
-        canvas.concat(transformation);
+            // Cut out only the correct picture
+            canvas.clipRect(dx*(index), 0, dx*(index+1),
+                    mDrawable.getIntrinsicHeight());
 
-        canvas.clipRect(dx * index, 0, dx * (index+1),
-              mDrawable.getIntrinsicHeight());
+        } else {
+            // Translate picture to position it correctly in the frame
+            transformation.preTranslate(-dx*index, 0);
 
+            // Add the transformation to the canvas
+            canvas.concat(transformation);
+
+            // Cut out only the correct picture
+            canvas.clipRect(dx * index, 0, dx * (index+1),
+                    mDrawable.getIntrinsicHeight());
+        }
+
+        // Draw on canvas
         mDrawable.draw(canvas);
 
         canvas.restore();
@@ -84,5 +117,10 @@ public class AniImage extends SpriteView {
 
     public int getHeight() {
         return mDrawable.getMinimumHeight();
+    }
+
+    public void flip() {
+        isMirrored = !isMirrored;
+        index = 0;
     }
 }

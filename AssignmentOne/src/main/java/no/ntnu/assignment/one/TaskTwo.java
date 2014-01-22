@@ -52,14 +52,7 @@ public class TaskTwo extends State implements TouchListener {
         imgChopper = new Image(R.drawable.chopper_static);
         chopper = new Chopper(imgChopper);
 
-        Paint[] ButtonColors = {
-                new Font(255, 255, 255, 50.0f,
-                        Typeface.SANS_SERIF, Typeface.BOLD),
-                new Font(57, 152, 249, 50.0f,
-                        Typeface.SANS_SERIF, Typeface.BOLD)
-        };
-
-        labelFPS = new TextButton(0, 50.0f, "X: 0, Y: 0", ButtonColors);
+        labelFPS = new TextButton(0, 50.0f, "X: 0, Y: 0", Config.ButtonColors);
 
     }
 
