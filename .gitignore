@@ -36,3 +36,9 @@ local.properties
 *.ipr
 *~
 *.swp
+
+
+# Personal
+.idea/gradle.xml
+.idea/misc.xml
+.idea/modules.xml
