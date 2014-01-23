@@ -10,6 +10,7 @@ import no.ntnu.assignment.one.Config;
 import no.ntnu.assignment.one.graphics.AniImage;
 import sheep.game.Sprite;
 import sheep.graphics.Image;
+import sheep.math.Vector2;
 
 /**
  * Created by bvx89 on 1/16/14.
@@ -48,30 +49,48 @@ public class AniChopper extends Sprite {
 
     @Override
     public void update(float dt) {
-        super.update(dt);
-
         // Calculate bounds
         float minx = getX();
         float maxx = minx + imgWidth;
         float miny = getY();
         float maxy = miny + imgHeight;
 
+        float speedX = getSpeed().getX();
+        float speedY = getSpeed().getY();
+
         // Check left and right edge
-        if (minx < 0) { // left edge
-            setXSpeed(getSpeed().getX() * -1);
+        if ((minx < 0 && speedX < 0) || // Left edge
+            (maxx >= Config.WINDOW_WIDTH && speedX > 0)) { // Right edge
+            setXSpeed(speedX * -1);
             img.flip();
-            setPosition(1, getY());
-        } else if (maxx > Config.WINDOW_WIDTH) { // Right edge
-            setXSpeed(getSpeed().getX() * -1);
-            img.flip();
-            setPosition(Config.WINDOW_WIDTH-imgWidth, getY());
         }
 
         // Check top and bottom
-        if (miny < 0 || maxy > Config.WINDOW_HEIGHT) { // Top edge
-            setYSpeed(getSpeed().getY() * -1);
-
+        if ((miny < 0 && speedY < 0) ||
+            (maxy > Config.WINDOW_HEIGHT && speedY > 0)) {
+            setYSpeed(speedY * -1);
         }
+        super.update(dt);
+    }
 
+    public void flip() {
+        img.flip();
+    }
+    
+    public boolean radialCollide(AniChopper other){
+        float r1 = (imgHeight + imgWidth) / 4;
+        float r2 = (other.imgHeight + other.imgWidth) / 4;
+        
+        Vector2 dist = getPosition().getSubtracted(other.getPosition());
+        Vector2 speed = getSpeed().getSubtracted(other.getSpeed());
+
+        if ((speed.getX()*dist.getX() + speed.getY()*dist.getY()) >= 0)  {
+            return false;
+        } else if (r1 + r2 > dist.getLength()){
+            return true;
+        } else {
+            return false;
+        }
     }
 }
+

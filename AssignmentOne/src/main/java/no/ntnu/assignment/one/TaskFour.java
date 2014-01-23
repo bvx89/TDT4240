@@ -38,7 +38,7 @@ public class TaskFour extends State implements TouchListener{
 	//private int leftScore;
 	//private int rightScore;
 	private final float speedIncrease = 0.1f;
-	private final float botSpeed = 200;
+	private final float botSpeed = 500;
 
 	
 	public TaskFour() {
