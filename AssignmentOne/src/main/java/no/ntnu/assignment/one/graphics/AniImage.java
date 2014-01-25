@@ -80,29 +80,27 @@ public class AniImage extends SpriteView {
 
         // Invert the image
         if (isMirrored) {
+
+			/* Translate picture to position it correctly in the frame.
+			 * Need to add +1 on index since the rotated picture are now
+			 * one image-width outside of the rectangle to be drawn.
+			 */
             transformation.preTranslate(dx*(index+1), 0);
 
-            // Translate picture to position it correctly in the frame
+			// flip the image along the y-axis            
             transformation.preScale(-1, 1);
-
-            // Add the transformation to the canvas
-            canvas.concat(transformation);
-
-            // Cut out only the correct picture
-            canvas.clipRect(dx*(index), 0, dx*(index+1),
-                    mDrawable.getIntrinsicHeight());
 
         } else {
             // Translate picture to position it correctly in the frame
             transformation.preTranslate(-dx*index, 0);
-
-            // Add the transformation to the canvas
-            canvas.concat(transformation);
-
-            // Cut out only the correct picture
-            canvas.clipRect(dx * index, 0, dx * (index+1),
-                    mDrawable.getIntrinsicHeight());
         }
+
+		// Add the transformation to the canvas
+		canvas.concat(transformation);
+
+		// Cut out only the correct picture
+		canvas.clipRect(dx * index, 0, dx * (index+1),
+			mDrawable.getIntrinsicHeight());
 
         // Draw on canvas
         mDrawable.draw(canvas);
